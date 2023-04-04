@@ -113,9 +113,12 @@ export class AppComponent {
     // Delegate to leverage contract for borrow amount: approveDelegation(flashLoanLeverageContract.address, borrow);
     // Execute flash leverage: (userAddress, USDC_ADDRESS, loan, borrow);
   this.FLLeverageContract = new ethers.Contract(FL_LEVERAGE_ADDRESS, FlashLoanLeverageJson.abi, this.signer);
-  const tx = await this.FLLeverageContract['approve'](this.signer?._address, loan);
-  await tx.wait();
+  const txApproveLoanAmount = await this.FLLeverageContract['approve'](this.signer?._address, loan);
+  await txApproveLoanAmount.wait();
   console.log(`Loan amount approved`);
+
+  
+
 
   }
 

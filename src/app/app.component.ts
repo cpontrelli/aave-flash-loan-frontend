@@ -107,11 +107,16 @@ export class AppComponent {
     });
   }
 
-  enterLeveragePosition(loan: number,  borrow: number) {
+  async enterLeveragePosition(loan: number,  borrow: number) {
     // TODO:
     // Approve leverage contract for loan amount: approve(flashLoanLeverageContract.address, loan)
     // Delegate to leverage contract for borrow amount: approveDelegation(flashLoanLeverageContract.address, borrow);
     // Execute flash leverage: (userAddress, USDC_ADDRESS, loan, borrow);
+  this.FLLeverageContract = new ethers.Contract(FL_LEVERAGE_ADDRESS, FlashLoanLeverageJson.abi, this.signer);
+  const tx = await this.FLLeverageContract['approve'](this.signer?._address, loan);
+  await tx.wait();
+  console.log(`Loan amount approved`);
+
   }
 
   exitLeveragePosition(repay: number) {

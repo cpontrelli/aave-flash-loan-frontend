@@ -1,0 +1,11 @@
+<div class="px-4 py-5 my-5 text-center">
+  <h1 class="display-5 fw-bold">USDC Flash Loan Dapp</h1>
+  <div class="col-lg-6 mx-auto">
+    <div *ngIf="!userAddress" class="my-4">
+      <button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="connectWallet()">Connect Wallet</button>
+    </div>
+    <div *ngIf="userAddress" class="my-4">
+      <p *ngIf="userAddress" class="lead mb-4">Connected!</p>
+    </div>
+  </div>
+</div>

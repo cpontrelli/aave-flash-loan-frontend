@@ -1,17 +1,32 @@
 <div class="px-4 py-5 my-5 text-center">
-  <h1 class="display-5 fw-bold">USDC Flash Loan Dapp</h1>
-  <div class="col-lg-6 mx-auto">
+  <h1 class="display-5 fw-bold">AAVE Flash Loans</h1>
+  <div class="col-lg-5 mx-auto my-4">
     <div *ngIf="!userAddress" class="my-4">
       <button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="connectWallet()">Connect Wallet</button>
     </div>
-    <div *ngIf="userAddress" class="my-4">
-      <p *ngIf="userAddress" class="lead mb-4">Connected!</p>
+    <div *ngIf="userAddress" class="card my-4">
+      <div class="card-body my-4">
+        <h5 class="card-title mb-3">Leverage Position</h5>
+        <div class="form-floating mb-3">
+          <input #loanInput id="loanInput" class="form-control" type="number"/>
+          <label for="loanInput">USDC to lend</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input #borrowInput id="borrowInput" class="form-control" type="number"/> 
+          <label for="borrowInput">USDC to borrow</label>
+        </div>
+        <button class="btn btn-success btn-lg px-4 gap-3" (click)="enterLeveragePosition(loanInput.value, borrowInput.value)">Execute</button>
+      </div>
     </div>
-    <div *ngIf="userAddress" class="my-4">
-      <p *ngIf="userAddress" class="lead mb-4">Approve the contract to interact first</p>
-      <button type="button" class="btn btn-danger btn-lg px-4 gap-3" onclick="alert('here should be approve function') ">Approve contract</button>
-
+    <div *ngIf="userAddress" class="card my-4">
+      <div class="card-body my-4">
+        <h5 class="card-title mb-3">Exit Position</h5>
+        <div class="form-floating mb-3">
+          <input #repayInput id="repayInput" class="form-control" type="number"/> 
+          <label for="repayInput">USDC to repay</label>
+        </div>        
+        <button class="btn btn-success btn-lg px-4 gap-3" (click)="exitLeveragePosition(repayInput.value)">Execute</button>
+      </div>
     </div>
-
   </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BigNumber, Contract, ethers, utils } from 'ethers';
+import { Contract, ethers, utils } from 'ethers';
 import { ExternalProvider } from "@ethersproject/providers";
 import IPoolJson from "../assets/IPool.json";
 import ERC20Json from "../assets/ERC20.json";
@@ -107,25 +107,39 @@ export class AppComponent {
     });
   }
 
-  async enterLeveragePosition(loan: number,  borrow: number) {
-    // TODO:
-    // Approve leverage contract for loan amount: approve(flashLoanLeverageContract.address, loan)
-    // Delegate to leverage contract for borrow amount: approveDelegation(flashLoanLeverageContract.address, borrow);
-    // Execute flash leverage: (userAddress, USDC_ADDRESS, loan, borrow);
-  this.FLLeverageContract = new ethers.Contract(FL_LEVERAGE_ADDRESS, FlashLoanLeverageJson.abi, this.signer);
-  const txApproveLoanAmount = await this.FLLeverageContract['approve'](this.signer?._address, loan);
-  await txApproveLoanAmount.wait();
-  console.log(`Loan amount approved`);
+  async enterLeveragePosition(loan: string,  borrow: string) {
+    if(!this.signer) return;
 
-  
+    const approveTx = await this.USDCContract?.connect(this.signer)['approve'](FL_LEVERAGE_ADDRESS, ethers.utils.parseUnits(loan, 6));
+    await approveTx.wait();
 
+    const debtTx = await this.USDCDebtContract?.connect(this.signer)['approveDelegation'](FL_LEVERAGE_ADDRESS, ethers.utils.parseUnits(loan, 6));
+    await debtTx.wait();
 
+    const flashLoanTx = await this.FLLeverageContract?.connect(this.signer)['flashLoanLeverage'](
+      this.userAddress,
+      USDC_ADDRESS,
+      ethers.utils.parseUnits(loan, 6),
+      ethers.utils.parseUnits(borrow, 6)
+    );
+    await flashLoanTx.wait();
   }
 
-  exitLeveragePosition(repay: number) {
-    // TODO:
-    // Approve exit contract for aUSDC repay amount: approve(flashLoanExitContract.address, repay * 1.01)
-    // Execute flash exit: exitFlashLoan(userAddress, USDC_ADDRESS, AUSDC_ADDRESS, repay)
+  async exitLeveragePosition(repay: string) {
+    const approvalAmount = parseFloat(repay) * 1.01;
+
+    if(!this.signer) return;
+
+    const approveTx = await this.AUSDCContract?.connect(this.signer)['approve'](FL_EXIT_ADDRESS, ethers.utils.parseUnits(approvalAmount.toString(), 6));
+    await approveTx.wait();
+
+    const flashLoanTx = await this.FLExitContract?.connect(this.signer)['exitFlashLoan'](this.userAddress, USDC_ADDRESS, AUSDC_ADDRESS, ethers.utils.parseUnits(repay, 6));
+    await flashLoanTx.wait();
+  }
+
+  stringToFloat(str: string){
+    console.log('poop');
+    return parseFloat(str); 
   }
 
 }

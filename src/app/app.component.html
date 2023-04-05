@@ -2,7 +2,7 @@
   <h1 class="display-5 fw-bold text-white">AAVE Flash Loans</h1>
   <div class="col-lg-5 mx-auto my-4">
     <div *ngIf="!userAddress" class="my-4">
-      <button type="button" class="btn btn-primary border-white btn-lg px-4 gap-3" (click)="connectWallet()">Connect Wallet</button>
+      <button type="button" class="btn btn-success border-white btn-lg px-4 gap-3" (click)="connectWallet()">Connect Wallet</button>
     </div>
     <div *ngIf="userAddress" class="card my-4 bg-secondary bg-gradient border-white">
       <div class="card-body my-4">
@@ -15,7 +15,7 @@
           <input #borrowInput id="borrowInput" class="form-control" type="number"/> 
           <label for="borrowInput">USDC to borrow</label>
         </div>
-        <button class="btn btn-primary border-white btn-lg px-4 gap-3" (click)="enterLeveragePosition(loanInput.value, borrowInput.value)">Execute</button>
+        <button class="btn btn-success border-white btn-lg px-4 gap-3" (click)="enterLeveragePosition(loanInput.value, borrowInput.value)">Execute</button>
       </div>
     </div>
     <div *ngIf="userAddress" class="card my-4 bg-secondary bg-gradient border-white">
@@ -25,7 +25,7 @@
           <input #repayInput id="repayInput" class="form-control" type="number"/> 
           <label for="repayInput">USDC to repay</label>
         </div>        
-        <button class="btn btn-primary border-white btn-lg px-4 gap-3" (click)="exitLeveragePosition(repayInput.value)">Execute</button>
+        <button class="btn btn-success border-white btn-lg px-4 gap-3" (click)="exitLeveragePosition(repayInput.value)">Execute</button>
       </div>
     </div>
   </div>

@@ -9,13 +9,13 @@
         <h4 class="card-title mb-3 text-white">Leverage Position</h4>
         <div class="form-floating mb-3">
           <input #loanInput id="loanInput" class="form-control" type="number"/>
-          <label for="loanInput">USDC to lend</label>
+          <label for="loanInput">Total USDC to lend</label>
         </div>
         <div class="form-floating mb-3">
-          <input #borrowInput id="borrowInput" class="form-control" type="number"/> 
-          <label for="borrowInput">USDC to borrow</label>
+          <input #supplyInput id="supplyInput" class="form-control" type="number"/> 
+          <label for="supplyInput">USDC to supply</label>
         </div>
-        <button class="btn btn-success border-white btn-lg px-4 gap-3" (click)="enterLeveragePosition(loanInput.value, borrowInput.value)">Execute</button>
+        <button class="btn btn-success border-white btn-lg px-4 gap-3" (click)="enterLeveragePosition(loanInput.value, supplyInput.value)">Execute</button>
       </div>
     </div>
     <div *ngIf="userAddress" class="card my-4 bg-secondary bg-gradient border-white">

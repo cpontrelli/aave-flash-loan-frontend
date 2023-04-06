@@ -12,7 +12,7 @@ const POOL_ADDRESS = '0x7b5C526B7F8dfdff278b4a3e045083FBA4028790';
 const USDC_ADDRESS = '0x65aFADD39029741B3b8f0756952C74678c9cEC93';
 const AUSDC_ADDRESS = '0x8Be59D90A7Dc679C5cE5a7963cD1082dAB499918';
 const USDC_DEBT_ADDRESS = '0x4DAe67e69aCed5ca8f99018246e6476F82eBF9ab';
-const FL_LEVERAGE_ADDRESS = '0x129Ca7ff8C681ee4640904e7fa1b09Bb584542Ac';
+const FL_LEVERAGE_ADDRESS = '0xe2E3F88200C6e63A14dad0E6596bbED426b74B56';
 const FL_EXIT_ADDRESS = '0x5a4a5690b427DB7514D4588a0193D3f3f421BE43';
 
 // Metamask will inject the ethereum object to DOM
@@ -107,20 +107,22 @@ export class AppComponent {
     });
   }
 
-  async enterLeveragePosition(loan: string,  borrow: string) {
+  async enterLeveragePosition(loan: string,  supply: string) {
     if(!this.signer) return;
 
-    const approveTx = await this.USDCContract?.connect(this.signer)['approve'](FL_LEVERAGE_ADDRESS, ethers.utils.parseUnits(loan, 6));
+    const debtAmount = (parseFloat(loan) - parseFloat(supply)) * 1.01;
+
+    const approveTx = await this.USDCContract?.connect(this.signer)['approve'](FL_LEVERAGE_ADDRESS, ethers.utils.parseUnits(supply, 6));
     await approveTx.wait();
 
-    const debtTx = await this.USDCDebtContract?.connect(this.signer)['approveDelegation'](FL_LEVERAGE_ADDRESS, ethers.utils.parseUnits(loan, 6));
+    const debtTx = await this.USDCDebtContract?.connect(this.signer)['approveDelegation'](FL_LEVERAGE_ADDRESS, ethers.utils.parseUnits(debtAmount.toString(), 6));
     await debtTx.wait();
 
     const flashLoanTx = await this.FLLeverageContract?.connect(this.signer)['flashLoanLeverage'](
       this.userAddress,
       USDC_ADDRESS,
       ethers.utils.parseUnits(loan, 6),
-      ethers.utils.parseUnits(borrow, 6)
+      ethers.utils.parseUnits(supply, 6)
     );
     await flashLoanTx.wait();
   }
